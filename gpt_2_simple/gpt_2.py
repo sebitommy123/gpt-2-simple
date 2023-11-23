@@ -212,7 +212,8 @@ def finetune(sess,
              finetune_freeze_config=lambda v: 1,
              optimizer='adam',
              overwrite=False,
-             reuse=False):
+             reuse=False,
+             experiment_name="experiment"):
     """Finetunes the model on the given dataset.
 
     Adapted from https://github.com/nshepperd/gpt-2/blob/finetuning/train.py.
@@ -436,7 +437,7 @@ def finetune(sess,
                         loss=v_loss,
                         avg=avg_loss[0] / avg_loss[1]))
                 
-                plot_and_save_loss(loss_history, counter)
+                plot_and_save_loss(loss_history, counter, experiment_name)
 
             counter += 1
     except KeyboardInterrupt:
@@ -445,7 +446,7 @@ def finetune(sess,
 
 import matplotlib.pyplot as plt
 
-def plot_and_save_loss(loss_history, step):
+def plot_and_save_loss(loss_history, step, experiment_name):
     os.makedirs("plots", exist_ok=True)
 
     steps, losses = zip(*loss_history)
@@ -456,7 +457,7 @@ def plot_and_save_loss(loss_history, step):
     plt.title("Training Loss over Time")
     plt.legend()
     plt.grid(True)
-    plt.savefig(f"plots/loss_plot_step_{step}.png")
+    plt.savefig(f"plots/loss_plot_exp_{experiment_name}.png")
     plt.close()
 
 def load_gpt2(sess,

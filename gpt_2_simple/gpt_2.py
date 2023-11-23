@@ -303,7 +303,7 @@ def finetune(sess,
         else:
             opt_grads = tf.gradients(ys=loss, xs=train_vars)
         opt_grads = list(zip(opt_grads, train_vars))
-        if False:
+        if True:
             scaled_opt_grads = []
             for grad, var in zip(opt_grads, train_vars):
                 scaled_lr = learning_rate * finetune_freeze_config(var.name)

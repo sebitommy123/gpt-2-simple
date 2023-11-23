@@ -145,7 +145,7 @@ def finetune_gradual_freeze_transformer_layers(v, n_layers=12, max_rate=1.0):
     """
     if "/h" in v:
         # Extracting layer index from variable name
-        layer_index_str = v.split('/')[2][1:]  # This gets the part like '0' from 'h0'
+        layer_index_str = v.split('/')[1][1:]  # This gets the part like '0' from 'h0'
         if layer_index_str.isdigit():
             layer_index = int(layer_index_str)
             rate = max_rate * ((n_layers - layer_index) / n_layers)

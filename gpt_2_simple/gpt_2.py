@@ -446,6 +446,8 @@ def finetune(sess,
 import matplotlib.pyplot as plt
 
 def plot_and_save_loss(loss_history, step):
+    os.makedirs("plots", exist_ok=True)
+
     steps, losses = zip(*loss_history)
     plt.figure(figsize=(10, 6))
     plt.plot(steps, losses, label="Training Loss")

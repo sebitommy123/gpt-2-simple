@@ -293,13 +293,22 @@ def finetune(sess,
         opt_compute = opt.compute_gradients(loss)
         opt_apply = opt.apply_gradients()
         summary_loss = tf.compat.v1.summary.scalar('loss', opt_apply)
+
     else:
         if use_memory_saving_gradients:
             opt_grads = memory_saving_gradients.gradients(loss, train_vars)
         else:
             opt_grads = tf.gradients(ys=loss, xs=train_vars)
         opt_grads = list(zip(opt_grads, train_vars))
-        opt_apply = opt.apply_gradients(opt_grads)
+        if False:
+            scaled_opt_grads = []
+            for grad, var in zip(opt_grads, train_vars):
+                scaled_lr = learning_rate * finetune_freeze_config(var.name)
+                scaled_grad = grad * scaled_lr
+                scaled_opt_grads.append((scaled_grad, var))
+        else:
+            scaled_opt_grads = opt_grads
+        opt_apply = opt.apply_gradients(scaled_opt_grads)
         summary_loss = tf.compat.v1.summary.scalar('loss', loss)
 
     summary_log = tf.compat.v1.summary.FileWriter(checkpoint_path)

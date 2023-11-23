@@ -123,6 +123,68 @@ def get_available_gpus():
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
+def finetune_nothing(v):
+    return 0
+
+def finetune_transformer_layers(v):
+    if "/h" in v:
+        return 1
+    return 0
+
+def finetune_gradual_freeze_transformer_layers(v, n_layers=12, max_rate=1.0):
+    """
+    Gradually decreases the learning rate for lower transformer layers.
+    
+    :param v: Variable name.
+    :param n_layers: Total number of transformer layers in the model.
+    :param max_rate: Maximum learning rate to be applied (for the top layer).
+    :return: Learning rate for the variable.
+    """
+    if "/h" in v:
+        layer_index = int(v.split('/')[2][1:])  # Extracting layer index from variable name
+        rate = max_rate * ((n_layers - layer_index) / n_layers)
+        return rate
+    return 0
+
+def finetune_only_embedding_layers(v, rate=1.0):
+    """
+    Applies learning rate only to embedding layers.
+    
+    :param v: Variable name.
+    :param rate: Learning rate to be applied to embedding layers.
+    :return: Learning rate for the variable.
+    """
+    if "wte" in v or "wpe" in v:  # Token embeddings and positional embeddings
+        return rate
+    return 0
+
+def finetune_upper_transformer_layers(v, top_n=3, rate=1.0):
+    """
+    Applies learning rate only to the upper (last few) transformer layers.
+    
+    :param v: Variable name.
+    :param top_n: Number of top layers to train.
+    :param rate: Learning rate for the top layers.
+    :return: Learning rate for the variable.
+    """
+    if "/h" in v:
+        layer_index = int(v.split('/')[2][1:])  # Extracting layer index
+        if layer_index >= (12 - top_n):
+            return rate
+    return 0
+
+def finetune_only_attention_heads(v, rate=1.0):
+    """
+    Applies learning rate only to attention heads within transformer layers.
+    
+    :param v: Variable name.
+    :param rate: Learning rate for attention heads.
+    :return: Learning rate for the variable.
+    """
+    if "/attn/" in v:  # Targeting only attention heads
+        return rate
+    return 0
+
 def finetune(sess,
              dataset,
              steps=-1,
@@ -144,6 +206,7 @@ def finetune(sess,
              max_checkpoints=1,
              use_memory_saving_gradients=False,
              only_train_transformer_layers=False,
+             finetune_freeze_config=lambda v: 1,
              optimizer='adam',
              overwrite=False,
              reuse=False):
@@ -187,7 +250,7 @@ def finetune(sess,
     if model_name not in ['117M', '124M']:
         print('For larger models, the recommended finetune() parameters are:')
         print('\tuse_memory_saving_gradients = True')
-        print('\tonly_train_transformer_layers = True')
+        print('\tfinetune_freeze_config = gpt2.finetune_transformer_layers')
         print('\taccumulate_gradients = 1\n')
 
     context = tf.compat.v1.placeholder(tf.int32, [batch_size, None])
@@ -210,7 +273,7 @@ def finetune(sess,
         top_k=40)
 
     all_vars = [v for v in tf.compat.v1.trainable_variables() if 'model' in v.name]
-    train_vars = [v for v in all_vars if '/h' in v.name] if only_train_transformer_layers else all_vars
+    train_vars = [v for v in all_vars if finetune_freeze_config(v.name) > 0]
 
     if optimizer == 'adam':
         opt = tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)

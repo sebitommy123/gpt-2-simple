@@ -174,7 +174,7 @@ def finetune_upper_transformer_layers(v, top_n=3, rate=1.0):
     :return: Learning rate for the variable.
     """
     if "/h" in v:
-        layer_index = int(v.split('/')[2][1:])  # Extracting layer index
+        layer_index = int(v.split('/')[1][1:])  # Extracting layer index
         if layer_index >= (12 - top_n):
             return rate
     return 0

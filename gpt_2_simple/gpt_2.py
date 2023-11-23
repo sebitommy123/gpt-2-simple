@@ -430,7 +430,7 @@ def finetune(sess,
             if counter % print_every == 0:
                 avg_loss = (avg_loss[0] * 0.99 + v_loss,
                             avg_loss[1] * 0.99 + 1.0)
-                loss_history.append((counter, avg_loss[0] / avg_loss[1]))
+                loss_history.append((counter, v_loss))
 
                 print(
                     '[{counter} | {time:2.2f}] loss={loss:2.2f} avg={avg:2.2f}'

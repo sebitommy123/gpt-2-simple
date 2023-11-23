@@ -441,6 +441,7 @@ def finetune(sess,
                         avg=avg_loss[0] / avg_loss[1]))
                 
                 plot_and_save_loss(loss_history, counter, experiment_name)
+                write_loss_to_csv(loss_history, counter, experiment_name)
 
             counter += 1
     except KeyboardInterrupt:
@@ -448,6 +449,14 @@ def finetune(sess,
         save()
 
 import matplotlib.pyplot as plt
+
+import csv
+
+def write_loss_to_csv(loss_history, experiment_name):
+    with open(f"plots/loss_data_exp_{experiment_name}.csv", mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Step', 'Loss'])
+        writer.writerows(loss_history)
 
 def plot_and_save_loss(loss_history, step, experiment_name):
     os.makedirs("plots", exist_ok=True)

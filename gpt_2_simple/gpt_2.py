@@ -144,9 +144,12 @@ def finetune_gradual_freeze_transformer_layers(v, n_layers=12, max_rate=1.0):
     :return: Learning rate for the variable.
     """
     if "/h" in v:
-        layer_index = int(v.split('/')[2][1:])  # Extracting layer index from variable name
-        rate = max_rate * ((n_layers - layer_index) / n_layers)
-        return rate
+        # Extracting layer index from variable name
+        layer_index_str = v.split('/')[2][1:]  # This gets the part like '0' from 'h0'
+        if layer_index_str.isdigit():
+            layer_index = int(layer_index_str)
+            rate = max_rate * ((n_layers - layer_index) / n_layers)
+            return rate
     return 0
 
 def finetune_only_embedding_layers(v, rate=1.0):

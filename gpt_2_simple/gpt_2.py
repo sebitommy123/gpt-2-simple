@@ -126,6 +126,9 @@ def get_available_gpus():
 def finetune_nothing(v):
     return 0
 
+def finetune_all(v):
+    return 1
+
 def finetune_transformer_layers(v):
     if "/h" in v:
         return 1
@@ -392,6 +395,7 @@ def finetune(sess,
 
     avg_loss = (0.0, 0.0)
     start_time = time.time()
+    loss_history = []
 
     if steps:
         steps = int(steps)
@@ -422,6 +426,7 @@ def finetune(sess,
             if counter % print_every == 0:
                 avg_loss = (avg_loss[0] * 0.99 + v_loss,
                             avg_loss[1] * 0.99 + 1.0)
+                loss_history.append((counter, avg_loss[0] / avg_loss[1]))
 
                 print(
                     '[{counter} | {time:2.2f}] loss={loss:2.2f} avg={avg:2.2f}'
@@ -430,12 +435,27 @@ def finetune(sess,
                         time=time.time() - start_time,
                         loss=v_loss,
                         avg=avg_loss[0] / avg_loss[1]))
+                
+                plot_and_save_loss(loss_history, counter)
 
             counter += 1
     except KeyboardInterrupt:
         print('interrupted')
         save()
 
+import matplotlib.pyplot as plt
+
+def plot_and_save_loss(loss_history, step):
+    steps, losses = zip(*loss_history)
+    plt.figure(figsize=(10, 6))
+    plt.plot(steps, losses, label="Training Loss")
+    plt.xlabel("Steps")
+    plt.ylabel("Loss")
+    plt.title("Training Loss over Time")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"plots/loss_plot_step_{step}.png")
+    plt.close()
 
 def load_gpt2(sess,
               checkpoint='latest',

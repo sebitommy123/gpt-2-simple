@@ -441,7 +441,7 @@ def finetune(sess,
                         avg=avg_loss[0] / avg_loss[1]))
                 
                 plot_and_save_loss(loss_history, counter, experiment_name)
-                write_loss_to_csv(loss_history, counter, experiment_name)
+                write_loss_to_csv(loss_history, experiment_name)
 
             counter += 1
     except KeyboardInterrupt:

@@ -15,7 +15,9 @@ gpt2.finetune(sess,
               file_name,
               file_name,
               model_name=model_name,
-              steps=1000, # steps is max number of training steps
+              validate_every=100,
+              experiment_name="finetune_upper", # Make sure to change if you re-run so it won't override.
+              steps=1000,
               finetune_freeze_config=gpt2.finetune_all)
 
 gpt2.generate(sess)

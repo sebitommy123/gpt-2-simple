@@ -439,7 +439,7 @@ def finetune(sess,
 
             summary_log.add_summary(v_summary, counter)
 
-            if counter % validate_every == 0:
+            if counter % validate_every == 0 and False:
                 validation_avg_loss = validate_inline(
                     sess=sess,
                     context=context,

@@ -409,6 +409,7 @@ def finetune(sess,
     avg_loss = (0.0, 0.0)
     start_time = time.time()
     loss_history = []
+    validation_loss_history = []
 
     if steps:
         steps = int(steps)
@@ -446,6 +447,10 @@ def finetune(sess,
                     batch_size=batch_size,
                     steps=100  # Or however many steps you want to validate for
                 )
+                validation_loss_history.append((counter, validation_avg_loss))
+
+                plot_and_save_loss(validation_loss_history, counter, experiment_name + "_validation")
+                write_loss_to_csv(validation_loss_history, experiment_name + "_validation")
 
             if counter % print_every == 0:
                 avg_loss = (avg_loss[0] * 0.99 + v_loss,

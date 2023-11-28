@@ -194,6 +194,7 @@ def finetune_only_attention_heads(v, rate=1.0):
 
 def finetune(sess,
              dataset,
+             validation_dataset,
              steps=-1,
              model_name='124M',
              model_dir='models',
@@ -217,6 +218,7 @@ def finetune(sess,
              optimizer='adam',
              overwrite=False,
              reuse=False,
+             validate_every=1000,
              experiment_name="experiment"):
     """Finetunes the model on the given dataset.
 
@@ -344,6 +346,12 @@ def finetune(sess,
     chunks = load_dataset(enc, dataset, combine)
     data_sampler = Sampler(chunks)
     print('dataset has', data_sampler.total_size, 'tokens')
+
+    print('Loading validation dataset...')
+    validation_chunks = load_dataset(enc, validation_dataset, combine)
+    validation_data_sampler = Sampler(validation_chunks)
+    print('dataset has', validation_data_sampler.total_size, 'tokens')
+
     print('Training...')
 
     counter = 1
@@ -428,6 +436,17 @@ def finetune(sess,
 
             summary_log.add_summary(v_summary, counter)
 
+            if counter % validate_every == 0:
+                validation_avg_loss = validate_inline(
+                    sess=sess,
+                    model_output=output,
+                    loss=loss,
+                    enc=enc,
+                    data_sampler=validation_data_sampler,  # Make sure you have a separate sampler for validation data
+                    batch_size=batch_size,
+                    steps=100  # Or however many steps you want to validate for
+                )
+
             if counter % print_every == 0:
                 avg_loss = (avg_loss[0] * 0.99 + v_loss,
                             avg_loss[1] * 0.99 + 1.0)
@@ -448,6 +467,39 @@ def finetune(sess,
     except KeyboardInterrupt:
         print('interrupted')
         save()
+
+def validate_inline(sess,
+             model_output,
+             loss,
+             enc,
+             data_sampler,
+             batch_size=1,
+             steps=1000):
+    """
+    Run validation for a fixed number of steps and report the average loss.
+
+    :param sess: The TensorFlow session.
+    :param model_output: The output tensor of the model.
+    :param loss: The loss tensor.
+    :param enc: The encoder object.
+    :param data_sampler: A Sampler object to sample validation data.
+    :param batch_size: The number of examples in each batch.
+    :param steps: The number of validation steps to run.
+    """
+    print('Running validation...')
+    losses = []
+    for _ in range(steps):
+        # Sample a batch of data
+        batch = [data_sampler.sample(1024) for _ in range(batch_size)]
+
+        # Compute the loss
+        v_loss = sess.run(loss, feed_dict={model_output['input']: batch})
+        losses.append(v_loss)
+
+    # Calculate the final average loss
+    avg_loss = sum(losses) / len(losses)
+    print(f'Validation completed. Average loss: {avg_loss:.2f}')
+    return avg_loss
 
 import matplotlib.pyplot as plt
 

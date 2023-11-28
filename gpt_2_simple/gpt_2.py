@@ -282,8 +282,6 @@ def finetune(sess,
         temperature=1.0,
         top_k=40)
 
-    context = tf.compat.v1.placeholder(tf.int32, [batch_size, None])
-
     all_vars = [v for v in tf.compat.v1.trainable_variables() if 'model' in v.name]
     train_vars = [v for v in all_vars if finetune_freeze_config(v.name) > 0]
 

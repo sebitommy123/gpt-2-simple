@@ -503,7 +503,7 @@ def validate_inline(sess,
     # print('Dataset has', data_sampler.total_size, 'tokens')
 
     # Prepare for validation
-    print('Running validation for one minute...')
+    print('Running validation...')
     start_time = time.time()
     end_time = start_time + 60  # 60 seconds from the start time
     losses = []
@@ -516,7 +516,8 @@ def validate_inline(sess,
         # Compute the loss
         v_loss = sess.run(loss, feed_dict={context: batch})
         losses.append(v_loss)
-        print(f'[Step: {counter}] Validation loss: {v_loss:.2f}')
+        if counter % 10 == 0:
+            print(f'[Step: {counter}] Validation loss: {v_loss:.2f}')
 
         if counter == steps:
             break

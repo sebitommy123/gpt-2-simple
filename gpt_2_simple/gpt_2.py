@@ -492,7 +492,6 @@ def validate_inline(sess,
     """
     
     # Load the model
-    output = model.model(hparams=hparams, X=context)
     loss = tf.reduce_mean(
         input_tensor=tf.nn.sparse_softmax_cross_entropy_with_logits(
             labels=context[:, 1:], logits=output['logits'][:, :-1]))

@@ -218,7 +218,7 @@ def finetune(sess,
              optimizer='adam',
              overwrite=False,
              reuse=False,
-             validate_every=1000,
+             validate_every=100,
              experiment_name="experiment"):
     """Finetunes the model on the given dataset.
 
@@ -281,6 +281,8 @@ def finetune(sess,
         batch_size=batch_size,
         temperature=1.0,
         top_k=40)
+
+    context = tf.compat.v1.placeholder(tf.int32, [batch_size, None])
 
     all_vars = [v for v in tf.compat.v1.trainable_variables() if 'model' in v.name]
     train_vars = [v for v in all_vars if finetune_freeze_config(v.name) > 0]
@@ -440,7 +442,7 @@ def finetune(sess,
             if counter % validate_every == 0:
                 validation_avg_loss = validate_inline(
                     sess=sess,
-                    model_output=output,
+                    context=context,
                     loss=loss,
                     enc=enc,
                     data_sampler=validation_data_sampler,  # Make sure you have a separate sampler for validation data
@@ -474,7 +476,7 @@ def finetune(sess,
         save()
 
 def validate_inline(sess,
-             model_output,
+             context,
              loss,
              enc,
              data_sampler,
@@ -498,7 +500,7 @@ def validate_inline(sess,
         batch = [data_sampler.sample(1024) for _ in range(batch_size)]
 
         # Compute the loss
-        v_loss = sess.run(loss, feed_dict={model_output['input']: batch})
+        v_loss = sess.run(loss, feed_dict={context: batch})
         losses.append(v_loss)
 
     # Calculate the final average loss

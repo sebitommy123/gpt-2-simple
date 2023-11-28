@@ -16,6 +16,7 @@ import csv
 import argparse
 from sys import exit
 import codecs
+import time
 
 # if in Google Colaboratory
 try:
@@ -481,8 +482,7 @@ def validate(sess,
              checkpoint_dir='checkpoint',
              run_name='run1'):
 
-    # Assume that the necessary functions and classes are defined elsewhere: 
-    # `load_dataset`, `Sampler`, `encoder.get_encoder`, `model.default_hparams`, etc.
+    # Assume the necessary functions and classes are defined elsewhere: `load_dataset`, `Sampler`, `encoder.get_encoder`, `model.default_hparams`, etc.
 
     checkpoint_path = os.path.join(checkpoint_dir, run_name)
     
@@ -512,38 +512,31 @@ def validate(sess,
     print('Loading dataset...')
     chunks = load_dataset(enc, dataset, combine)
     data_sampler = Sampler(chunks)
-    
-    # Prepare for validation
-    print('dataset has', data_sampler.total_size, 'tokens')
-    print('Running validation...')
+    print('Dataset has', data_sampler.total_size, 'tokens')
 
-    avg_loss = (0.0, 0.0)
-    counter = 1
+    # Prepare for validation
+    print('Running validation for one minute...')
     start_time = time.time()
-    
-    # Validation loop
-    while True:
+    end_time = start_time + 60  # 60 seconds from the start time
+    losses = []
+    counter = 1
+
+    while time.time() < end_time:
         # Sample a batch of data
         batch = [data_sampler.sample(1024) for _ in range(batch_size)]
 
         # Compute the loss
         v_loss = sess.run(loss, feed_dict={context: batch})
-        avg_loss = (avg_loss[0] * 0.99 + v_loss, avg_loss[1] * 0.99 + 1.0)
+        losses.append(v_loss)
+        print(f'[Step: {counter}] Validation loss: {v_loss:.2f}')
 
-        # Print the validation loss
-        print(
-            '[{counter} | {time:2.2f}] validation loss={loss:2.2f} avg={avg:2.2f}'
-            .format(
-                counter=counter,
-                time=time.time() - start_time,
-                loss=v_loss,
-                avg=avg_loss[0] / avg_loss[1]))
-        
         counter += 1
-        # You'll need a condition to break out of the loop, depending on your validation strategy.
-        # For instance, you could validate for a certain number of steps or until the entire validation dataset is covered.
 
-# To use this function, you'd call it like this, with a TensorFlow session and your dataset:
+    # Calculate the final average loss
+    avg_loss = sum(losses) / len(losses)
+    print(f'Validation completed. Final average loss: {avg_loss:.2f}')
+
+# To use this function, you would call it with a TensorFlow session and your dataset:
 # validate(sess, dataset)
 
 def load_gpt2(sess,

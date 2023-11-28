@@ -13,6 +13,7 @@ file_name = "all_jokes.txt"
 sess = gpt2.start_tf_sess()
 gpt2.finetune(sess,
               file_name,
+              file_name,
               model_name=model_name,
               steps=1000, # steps is max number of training steps
               finetune_freeze_config=gpt2.finetune_all)

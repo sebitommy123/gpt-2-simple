@@ -439,14 +439,13 @@ def finetune(sess,
 
             summary_log.add_summary(v_summary, counter)
 
-            if counter % validate_every == 0 and False:
-                validation_avg_loss = validate_inline(
-                    sess=sess,
-                    context=context,
-                    loss=loss,
-                    enc=enc,
-                    data_sampler=validation_data_sampler,  # Make sure you have a separate sampler for validation data
-                    batch_size=batch_size,
+            if counter % validate_every == 0:
+                validation_avg_loss = validate_inline(sess,
+                    enc,
+                    validation_data_sampler,
+                    context,
+                    output,
+                    batch_size=1,
                     steps=100  # Or however many steps you want to validate for
                 )
                 validation_loss_history.append((counter, validation_avg_loss))
@@ -476,12 +475,12 @@ def finetune(sess,
         save()
 
 def validate_inline(sess,
-             context,
-             loss,
              enc,
              data_sampler,
+             context,
+             output,
              batch_size=1,
-             steps=1000):
+             steps=100):
     """
     Run validation for a fixed number of steps and report the average loss.
 
@@ -493,19 +492,44 @@ def validate_inline(sess,
     :param batch_size: The number of examples in each batch.
     :param steps: The number of validation steps to run.
     """
-    print('Running validation...')
+    
+    # Load the model
+    output = model.model(hparams=hparams, X=context)
+    loss = tf.reduce_mean(
+        input_tensor=tf.nn.sparse_softmax_cross_entropy_with_logits(
+            labels=context[:, 1:], logits=output['logits'][:, :-1]))
+
+    # Load the dataset
+    # print('Loading dataset...')
+    # chunks = load_dataset(enc, dataset, combine)
+    # data_sampler = Sampler(chunks)
+    # print('Dataset has', data_sampler.total_size, 'tokens')
+
+    # Prepare for validation
+    print('Running validation for one minute...')
+    start_time = time.time()
+    end_time = start_time + 60  # 60 seconds from the start time
     losses = []
-    for _ in range(steps):
+    counter = 1
+
+    while time.time() < end_time:
         # Sample a batch of data
         batch = [data_sampler.sample(1024) for _ in range(batch_size)]
 
         # Compute the loss
         v_loss = sess.run(loss, feed_dict={context: batch})
         losses.append(v_loss)
+        print(f'[Step: {counter}] Validation loss: {v_loss:.2f}')
+
+        if counter == steps:
+            break
+
+        counter += 1
 
     # Calculate the final average loss
     avg_loss = sum(losses) / len(losses)
-    print(f'Validation completed. Average loss: {avg_loss:.2f}')
+    print(f'Validation completed. Final average loss: {avg_loss:.2f}')
+
     return avg_loss
 
 import matplotlib.pyplot as plt

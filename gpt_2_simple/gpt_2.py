@@ -219,6 +219,7 @@ def finetune(sess,
              overwrite=False,
              reuse=False,
              validate_every=100,
+             momentum_beta=0.9,
              experiment_name="experiment"):
     """Finetunes the model on the given dataset.
 
@@ -286,7 +287,7 @@ def finetune(sess,
     train_vars = [v for v in all_vars if finetune_freeze_config(v.name) > 0]
 
     if optimizer == 'adam':
-        opt = tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate)
+        opt = tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate, beta1=momentum_beta)
     elif optimizer == 'sgd':
         opt = tf.compat.v1.train.GradientDescentOptimizer(learning_rate=learning_rate)
 

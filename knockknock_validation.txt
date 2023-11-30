@@ -1,0 +1,252 @@
+<start>
+Knock, knock.
+Who’s there?
+Amy.
+Amy who?
+Amy fraid I’ve forgotten!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Andrew.
+Andrew who?
+Andrew a picture!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Anita.
+Anita who?
+Anita to borrow a pencil!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Annie.
+Annie who?
+Annie body going to open this door?
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Annie.
+Annie who?
+Annie thing you can do I can better! (bonus points if you sing this line)
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Chick.
+Chick who?
+Chick your stove, I can smell it burning!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+A herd.
+A herd who?
+A herd you were home. Can you play?
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Alpaca.
+Alpaca who?
+Alpaca the trunk, you apacka the suitcase!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Tyrone.
+Tyrone who?
+Tyrone shoelaces!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Wendy.
+Wendy who?
+Wendy bell works again, I won’t have to knock.
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Will.
+Will who?
+Will you let me in? It’s freezing out here!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Robin.
+Robin who?
+Robin your house!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Sherlock.
+Sherlock who?
+Sherlock your door shut tight.
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Troy.
+Troy who?
+Troy ringing the doorbell!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Nana.
+Nana who?
+Nana your business who’s there.
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Nobel.
+Nobel who?
+No bell, that’s why I knocked!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Otto.
+Otto who?
+Otto know what’s taking you so long!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Kent.
+Kent who?
+Kent you tell who I am by my voice?
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Lena.
+Lena who?
+Lena little closer and I’ll tell you!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Luke.
+Luke who?
+Luke through the keyhole to see!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Mikey.
+Mikey who?
+Mikey doesn’t fit in the keyhole!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Candice.
+Candice who?
+Candice joke possibly get any worse?
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Claire.
+Claire who?
+Claire the way; I’m coming in!
+<end>
+<start>
+Knock, knock. 
+Who’s there? 
+Dewey. 
+Dewey who? 
+Dewey have to go to school today?
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Doris.
+Doris who?
+Doris locked. Open up, please!
+<end>
+<start>
+Knock, knock. 
+Who’s there? 
+Alfie. 
+Alfie who? 
+Alfie terrible if you leave!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Alma.
+Alma who?
+Alma not going to say.
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Amanda.
+Amanda who?
+A man da fix your doorbell!
+<end>
+<start>
+Knock, knock. 
+Who’s there? 
+Feline. 
+Feline who? 
+Feline fine, how about you?
+<end>
+<start>
+Knock, knock. 
+Who’s there? 
+Fish. 
+Fish who? 
+Fish you a happy day!
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Goat.
+Goat who?
+Goat to the door and find out.
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Honey bee.
+Honey bee who?
+Honey bee a dear and get me some water.
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Interrupting cow.
+Interrupting cow (you yell MOOOOOO before they can say, “who?”).
+<end>
+<start>
+Knock, knock.
+Who’s there?
+Interrupting sloth.
+Interrupting sloth who?
+(wait for 1020 seconds)
+Sloooooooooth
+<end>
+<start>
+Knock, knock. 
+Who’s there? 
+Bear. 
+Bear who? 
+Bear with me; I’m trying to tell a joke!
+<end>
+<start>
+Knock, knock. 
+Who’s there? 
+Bee. 
+Bee who? 
+Beehind you!
+<end>

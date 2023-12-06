@@ -2,7 +2,7 @@
 
 Run `pip install -r requirements.txt`, then `python3 demo.py`. You may change the variables in `demo.py` to select the fine-tuning method `gpt2.finetune_all`, `gpt2.finetune_upper_transformer_layers` and `gpt2.finetune_gradual_freeze_transformer_layers`. Plots will be placed in `/plots`.
 
-Example code in google colab: `https://colab.research.google.com/drive/1AN7IGkHmu8gNcvufxTd3L1NBoOYpXVMr?usp=sharing`
+Example code in google colab: `https://colab.research.google.com/drive/1AN7IGkHmu8gNcvufxTd3L1NBoOYpXVMr?usp=sharing`. Beware google colab may kill your instance.
 
 # gpt-2-simple original project information
 
